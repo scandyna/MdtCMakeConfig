@@ -2,26 +2,27 @@
 
 [[_TOC_]]
 
-## Usage
+# Usage
 
-### Project using Conan
+## Project using Conan
 
 ```txt
 [requires]
-Mdt/0@scandyna/testing # TODO: check if 0 is ok for Conan
+# TODO: check if 0 is ok for Conan
+Mdt/0@scandyna/testing
 # OR
-MdtCMakeConfig/0@scandyna/testing # TODO: check if 0 is ok for Conan
+MdtCMakeConfig/0@scandyna/testing # <- this is better
 ```
 
-### Install the Debian package
+## Install the Debian package
 
 ```bash
 sudo apt-get install mdt0
 # OR
-sudo apt-get install mdt0CMakeConfig
+sudo apt-get install mdt0CMakeConfig # <- this is better
 ```
 
-## Background
+# Background
 
 Mdt is a namespace used in my personal projects (naming things is hard).
 
@@ -36,12 +37,12 @@ it became more a set of libraries that helps solve various common problems.
 Today, I think that Mdt could mean "Multiplatform Development Tools",
 despite, only Linux and Windows is supported for now.
 
-### Monolitic repository
+## Monolitic repository
 
 Because of the lack of C++ package manager,
 all the code was in a [monolitic repository](https://github.com/scandyna/multidiagtools).
 
-### Splitting to projects
+## Splitting to projects
 
 One day, I had to use a library from Mdt.
 I don't remeber exactly, but it was not easy.
@@ -51,7 +52,7 @@ Discovering the [Conan](https://conan.io/) package manager,
 I decided to start to split the tools and libraries
 (and yeah.. rewrite most of their parts, because.. I was young).
 
-## CMake find_package() component syntax
+# CMake find_package() component syntax
 
 All my libraries are in the `Mdt` namespace in the C++ source code.
 
@@ -91,7 +92,7 @@ Recently, while porting some project to use the new
 Conan [CMakeDeps](https://docs.conan.io/en/latest/reference/conanfile/tools/cmake/cmakedeps.html),
 I was stuck.
 
-## ????
+# ????
 
 Here is basically what is in `Mdt0Config.cmake`:
 ```cmake
@@ -124,7 +125,7 @@ If not found, it will then try other paths.
 Note: calling 2x find_package() as above
 seems to be obselete since CMake 3.12.
 
-### Conan package
+## Conan package
 
 ```txt
 [requires]
@@ -135,9 +136,9 @@ MdtCMakeConfig/0@scandyna/testing # TODO: check if 0 is ok for Conan
 
 TODO: should work with cmake generator ans CMakeDeps generator !
 
-### Debian package
+## Debian package
 
-### No package manager
+## No package manager
 
 # TODO: usage with and without a package manager !
 
@@ -152,5 +153,3 @@ At the start, it was a idea
 explain cmake component syntax, but multiple projects and packages
 
 for global installs, otherwise MdtCMakeModules one
-
-
