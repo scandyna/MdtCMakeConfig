@@ -4,22 +4,34 @@
 
 # Usage
 
+This illustrates what a Mdt library should do
+so that the user can use the CMake `find_package()`
+component syntax:
+```cmake
+find_package(Mdt0 REQUIRED COMPONENTS PlainText)
+```
+
 ## Project using Conan
 
+The library should depend on `MdtCMakeConfig`:
 ```txt
 [requires]
 # TODO: check if 0 is ok for Conan
-Mdt/0@scandyna/testing
-# OR
-MdtCMakeConfig/0@scandyna/testing # <- this is better
+MdtCMakeConfig/0@scandyna/testing
+```
+
+The user project will then use the library:
+```txt
+[requires]
+MdtPlainText/0.x.y@scandyna/testing
 ```
 
 ## Install the Debian package
 
+The library should depend on `MdtCMakeConfig`:
 ```bash
-sudo apt-get install mdt0
-# OR
-sudo apt-get install mdt0CMakeConfig # <- this is better
+sudo apt-get install mdt0plaintext
+# Will also install mdt0cmakeconfig
 ```
 
 # Background
