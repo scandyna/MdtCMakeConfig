@@ -148,20 +148,4 @@ MdtCMakeConfig/0@scandyna/testing # TODO: check if 0 is ok for Conan
 
 TODO: should work with cmake generator ans CMakeDeps generator !
 
-## Debian package
-
-## No package manager
-
-# TODO: usage with and without a package manager !
-
-Each project will be 
-
-
-Working on my dream, I finally realized 
-
-It started with a idea to create 
-At the start, it was a idea
-
-explain cmake component syntax, but multiple projects and packages
-
-for global installs, otherwise MdtCMakeModules one
+TODO: usage with and without a package manager !
