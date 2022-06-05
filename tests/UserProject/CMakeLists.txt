@@ -1,0 +1,6 @@
+
+cmake_minimum_required(VERSION 3.15)
+
+project(UserProject)
+
+find_package(Mdt0 REQUIRED COMPONENTS ItemModel NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH)
