@@ -149,3 +149,9 @@ MdtCMakeConfig/0@scandyna/testing # TODO: check if 0 is ok for Conan
 TODO: should work with cmake generator ans CMakeDeps generator !
 
 TODO: usage with and without a package manager !
+
+# Work on MdtCMakeModules
+
+## Build and test
+
+See [BUILD](BUILD.md).
