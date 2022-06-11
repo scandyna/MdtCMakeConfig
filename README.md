@@ -39,3 +39,10 @@ sudo apt-get install mdt0plaintext
 ## Build and test
 
 See [BUILD](BUILD.md).
+
+# Rationales
+
+To create Conan packages that support `find_package` COMPONENTS syntax
+with the new Conan generators is discussed in [Split Qt packages](ConanSplitQt.md).
+
+[Here](MdtBackground.md) are also some other discussions about Mdt.
