@@ -114,16 +114,18 @@ With modern Conan CMake generators, all CMake config files are generated in the 
 
 I think we cannot do this in a sane way.
 
-A way to solve this is to add the path
-to the Qt5Config.cmake to `CMAKE_PREFIX_PATH`.
-This is not allowed by Conan.
+A way to solve this is to set the path
+to the directory that contains the Qt5Config.cmake file
+to the `Qt5_DIR` variable.
+
+I think there is no way to express this directly in the conanfile.py.
 For details about that, see [Conan and CMake](https://scandyna.gitlab.io/mdt-cmake-modules/ConanAndCMake.html).
 
 The trick is to create what Conan calls a `build_module`,
-that will add the required path to `CMAKE_PREFIX_PATH`:
+that will set the `Qt5_DIR` variable.
+Here is a example of the build module, called `conan-qt5-config.cmake`:
 ```cmake
-# Simplified example (shoud check if not present before)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}")
+set(Qt5_DIR "${CMAKE_CURRENT_LIST_DIR}")
 ```
 
 For this example, the (installed) package layout looks like this:
