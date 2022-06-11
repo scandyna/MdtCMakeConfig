@@ -25,73 +25,6 @@ Cmake requires a file, named `Qt5Config.cmake`.
 For the other syntax in obove example,
 CMake requires 2 files, respectively `Qt5WidgetsConfig.cmake` and `Qt5SqlConfig.cmake`.
 
-# Define Conan recipes with components ?
-
-We could define components as described
-in [Define the package information](https://docs.conan.io/en/latest/creating_packages/package_information.html),
-in [cmake_find_package_multi](https://docs.conan.io/en/latest/reference/generators/cmake_find_package_multi.html)
-and in [CMakeDeps](https://docs.conan.io/en/latest/reference/conanfile/tools/cmake/cmakedeps.html).
-
-Lets try to define `QtWidgets` and `QtSql`.
-
-Examples will be simplified, only containing the minimum for the purpose
-and do not take care of the `cmake_find_package` and `cmake_find_package_multi` generators.
-
-QtWidgets:
-```python
-class QtWidgetsConan(ConanFile):
-
-  name = "QtWidgets"
-  requires = "QtGui"
-
-  def package_info(self):
-
-    self.cpp_info.set_property("cmake_file_name", "Qt5")
-    self.cpp_info.components["QtWidgets"].set_property("cmake_target_name", "Qt5::Widgets")
-    self.cpp_info.components["QtWidgets"].libs = ["Qt5Widgets"]
-    self.cpp_info.components["QtWidgets"].requires = ["QtGui"]
-```
-
-QtSql:
-```python
-class QtSqlConan(ConanFile):
-
-  name = "QtSql"
-  requires = "QtCore"
-
-  def package_info(self):
-
-    self.cpp_info.set_property("cmake_file_name", "Qt5")
-    self.cpp_info.components["QtSql"].set_property("cmake_target_name", "Qt5::Sql")
-    self.cpp_info.components["QtSql"].libs = ["Qt5Sql"]
-    self.cpp_info.components["QtSql"].requires = ["QtCore"]
-```
-
-In the user project:
-```txt
-[requires]
-QtWidgets/5.15.2
-QtSql/5.15.2
-
-[generators]
-CMakeDeps
-CMakeToolchain
-```
-
-Here we have 2 problems.
-
-First, we tell Conan to generate `Qt5Config.cmake` multiple times.
-So, in the build directory of the user project,
-we end up with only 1 target defined.
-It could be Qt5::Widgets, Qt5::Sql, Qt5::Core
-(it probably depends on the resolution/generation order).
-
-Second, we don't have `Qt5WidgetsConfig.camke` and `Qt5SqlConfig.cmake` files.
-This syntax will then not work:
-```cmake
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Sql REQUIRED)
-```
 
 # What result should we have
 
@@ -209,4 +142,74 @@ class QtWidgetsConan(ConanFile):
     self.cpp_info.set_property("cmake_file_name", "Qt5Widgets")
     self.cpp_info.set_property("cmake_target_name", "Qt5::Widgets")
     self.cpp_info.libs = ["Qt5Widgets"]
+```
+
+# Rationale
+
+## Define Conan recipes with components ?
+
+We could define components as described
+in [Define the package information](https://docs.conan.io/en/latest/creating_packages/package_information.html),
+in [cmake_find_package_multi](https://docs.conan.io/en/latest/reference/generators/cmake_find_package_multi.html)
+and in [CMakeDeps](https://docs.conan.io/en/latest/reference/conanfile/tools/cmake/cmakedeps.html).
+
+Lets try to define `QtWidgets` and `QtSql`.
+
+Examples will be simplified, only containing the minimum for the purpose
+and do not take care of the `cmake_find_package` and `cmake_find_package_multi` generators.
+
+QtWidgets:
+```python
+class QtWidgetsConan(ConanFile):
+
+  name = "QtWidgets"
+  requires = "QtGui"
+
+  def package_info(self):
+
+    self.cpp_info.set_property("cmake_file_name", "Qt5")
+    self.cpp_info.components["QtWidgets"].set_property("cmake_target_name", "Qt5::Widgets")
+    self.cpp_info.components["QtWidgets"].libs = ["Qt5Widgets"]
+    self.cpp_info.components["QtWidgets"].requires = ["QtGui"]
+```
+
+QtSql:
+```python
+class QtSqlConan(ConanFile):
+
+  name = "QtSql"
+  requires = "QtCore"
+
+  def package_info(self):
+
+    self.cpp_info.set_property("cmake_file_name", "Qt5")
+    self.cpp_info.components["QtSql"].set_property("cmake_target_name", "Qt5::Sql")
+    self.cpp_info.components["QtSql"].libs = ["Qt5Sql"]
+    self.cpp_info.components["QtSql"].requires = ["QtCore"]
+```
+
+In the user project:
+```txt
+[requires]
+QtWidgets/5.15.2
+QtSql/5.15.2
+
+[generators]
+CMakeDeps
+CMakeToolchain
+```
+
+Here we have 2 problems.
+
+First, we tell Conan to generate `Qt5Config.cmake` multiple times.
+So, in the build directory of the user project,
+we end up with only 1 target defined.
+It could be Qt5::Widgets, Qt5::Sql, Qt5::Core
+(it probably depends on the resolution/generation order).
+
+Second, we don't have `Qt5WidgetsConfig.camke` and `Qt5SqlConfig.cmake` files.
+This syntax will then not work:
+```cmake
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Sql REQUIRED)
 ```
