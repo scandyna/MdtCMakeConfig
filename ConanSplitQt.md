@@ -110,27 +110,47 @@ the problem of combinatorial builds is back.
 
 # Workaround
 
-Because the only thing we need is to support the CMake
-`find_package()` COMPONENTS syntax,
-we can create a package that loads a CMake module:
+With modern Conan CMake generators, all CMake config files are generated in the users build directory.
+
+I think we cannot do this in a sane way.
+
+A way to solve this is to add the path
+to the Qt5Config.cmake to `CMAKE_PREFIX_PATH`.
+This is not allowed by Conan.
+For details about that, see [Conan and CMake](https://scandyna.gitlab.io/mdt-cmake-modules/ConanAndCMake.html).
+
+The trick is to create what Conan calls a `build_module`,
+that will add the required path to `CMAKE_PREFIX_PATH`:
+```cmake
+# Simplified example (shoud check if not present before)
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}")
+```
+
+For this example, the (installed) package layout looks like this:
+```
+package-root
+  |-conan
+      |-Qt5Config.cmake
+      |-conan-qt5-config.cmake
+```
+
+In the conanfile, we declare `conan-qt5-config.cmake` as build module:
 ```python
 class QtConan(ConanFile):
 
   name = "Qt"
 
-  def package(self):
-
-    self.copy("Qt5Config.cmake")
-
   def package_info(self):
 
     self.cpp_info.set_property("cmake_file_name", "Qt5")
 
-    build_modules = ["Qt5Config.cmake"]
+    build_modules = ["conan/conan-qt5-config.cmake"]
 
     self.cpp_info.set_property("cmake_build_modules", build_modules)
     # Note: how can we tell Conan to not generate a fake Qt::Qt target ?
 ```
+
+The installation of the files is omitted in above example.
 
 The other Qt packages will not use the Conan component syntax anymore.
 
