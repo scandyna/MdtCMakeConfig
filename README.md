@@ -34,10 +34,6 @@ sudo apt-get install mdt0plaintext
 # Will also install mdt0cmakeconfig
 ```
 
-# CMake find_package() component syntax
-
-# Conan and find_package() component syntax
-
 # Split Qt packages
 
 As example, imagine we want to split Qt into several Conan packages.
@@ -249,35 +245,9 @@ class QtWidgetsConan(ConanFile):
     self.cpp_info.libs = ["Qt5Widgets"]
 ```
 
-
-TODO: decribe how to make conan generate Qt5Config.cmake
-Or, workaround
-
 TODO: later, will have to generate 2 variants.
 See `PATHS "${CMAKE_CURRENT_LIST_DIR}" NO_DEFAULT_PATH`
 and `PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH`
-
-# OTHER
-
-After calling conan install, the build directory will, of course,
-only contains 1 `Qt5Config.cmake` file.
-This is because each package describes it own.
-
-As result, only 1 Qt library will be defined
-(maybe QtSql, probably depends of the resolution/generation order).
-
-## Remember what we need
-
-TODO: remeber find_package() COMPONENTS syntax
-
-## Possible solution
-
-
-TODO: x overwrites y depends on resolution process ?
-
-TODO: what we should have when generated (f.ex. with CMakeDeps)
-
-TODO: conan component syntax and conflict of Qt5Config.cmake
 
 # Background
 
