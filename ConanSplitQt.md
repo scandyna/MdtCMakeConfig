@@ -210,7 +210,3 @@ class QtWidgetsConan(ConanFile):
     self.cpp_info.set_property("cmake_target_name", "Qt5::Widgets")
     self.cpp_info.libs = ["Qt5Widgets"]
 ```
-
-TODO: later, will have to generate 2 variants.
-See `PATHS "${CMAKE_CURRENT_LIST_DIR}" NO_DEFAULT_PATH`
-and `PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH`
