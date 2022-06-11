@@ -25,7 +25,7 @@ Cmake requires a file, named `Qt5Config.cmake`.
 For the other syntax in obove example,
 CMake requires 2 files, respectively `Qt5WidgetsConfig.cmake` and `Qt5SqlConfig.cmake`.
 
-## Define Conan recipes with components ?
+# Define Conan recipes with components ?
 
 We could define components as described
 in [Define the package information](https://docs.conan.io/en/latest/creating_packages/package_information.html),
@@ -93,7 +93,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 ```
 
-## What result should we have
+# What result should we have
 
 After `conan install`, we should end up with CMake package config files
 for all required Qt libraries, and also `Qt5Config.cmake`.
@@ -127,7 +127,7 @@ foreach(component ${Qt5_FIND_COMPONENTS})
 endforeach()
 ```
 
-## Express Qt5Config.cmake
+# Express Qt5Config.cmake
 
 Qt:
 ```python
@@ -171,7 +171,7 @@ So we are back to the monolitic package.
 Even if we put options to enable components or not,
 the problem of combinatorial builds is back.
 
-## Workaround
+# Workaround
 
 Because the only thing we need is to support the CMake
 `find_package()` COMPONENTS syntax,
