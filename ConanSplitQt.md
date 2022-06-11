@@ -9,6 +9,10 @@ In the user conanfile.txt:
 [requires]
 QtWidgets/5.15.2
 QtSql/5.15.2
+
+[generators]
+CMakeDeps
+CMakeToolchain
 ```
 
 In the user CMakeLists.txt:
