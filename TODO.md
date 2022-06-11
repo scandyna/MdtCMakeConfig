@@ -1,4 +1,9 @@
 
+should work with cmake generator ans CMakeDeps generator !
+
+usage with and without a package manager !
+
+
 Issue title ideas:
 - CMake find_package() COMPONENTS across Conan packages
 - Express Conan component syntax across multiple packages
