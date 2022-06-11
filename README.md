@@ -365,7 +365,7 @@ TODO: should work with cmake generator ans CMakeDeps generator !
 
 TODO: usage with and without a package manager !
 
-# Work on MdtCMakeModules
+# Work on MdtCMakeConfig
 
 ## Build and test
 
