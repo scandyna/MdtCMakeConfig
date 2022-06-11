@@ -72,7 +72,7 @@ Examples will be simplified, only containing the minimum for the purpose
 and do not take care of the `cmake_find_package` and `cmake_find_package_multi` generators.
 
 QtWidgets:
-```conan
+```python
 class QtWidgetsConan(ConanFile):
 
   name = "QtWidgets"
@@ -87,7 +87,7 @@ class QtWidgetsConan(ConanFile):
 ```
 
 QtSql:
-```conan
+```python
 class QtSqlConan(ConanFile):
 
   name = "QtSql"
@@ -164,7 +164,7 @@ endforeach()
 ## Express Qt5Config.cmake
 
 Qt:
-```conan
+```python
 class QtConan(ConanFile):
 
   name = "Qt"
@@ -180,7 +180,7 @@ the `find_package(Qt5 COMPONENTS ...)` syntax ?
 
 It could be tempting to describe the components
 in some Qt meta-package:
-```conan
+```python
 class QtConan(ConanFile):
 
   name = "Qt"
@@ -210,7 +210,7 @@ the problem of combinatorial builds is back.
 Because the only thing we need is to support the CMake
 `find_package()` COMPONENTS syntax,
 we can create a package that loads a CMake module:
-```conan
+```python
 class QtConan(ConanFile):
 
   name = "Qt"
@@ -232,7 +232,7 @@ class QtConan(ConanFile):
 The other Qt packages will not use the Conan component syntax anymore.
 
 Simplified example for QtWidgets:
-```conan
+```python
 class QtWidgetsConan(ConanFile):
 
   name = "QtWidgets"
