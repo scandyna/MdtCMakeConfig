@@ -1,9 +1,8 @@
 @PACKAGE_INIT@
 
-
-message("@MDT_CONFIG_INSTALL_NAMESPACE@")
-message("@MDT_CONFIG_COMPONENTS_RELATIVE_PATH@")
-message("@PACKAGE_MDT_CONFIG_COMPONENTS_RELATIVE_PATH@")
+if(CMAKE_VERSION VERSION_LESS 3.1.0)
+    message(FATAL_ERROR "@MDT_CONFIG_INSTALL_NAMESPACE@ requires at least CMake version 3.1.0")
+endif()
 
 if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS)
   set(@MDT_CONFIG_INSTALL_NAMESPACE@_NOT_FOUND_MESSAGE "The @MDT_CONFIG_INSTALL_NAMESPACE@ package requires at least one component")
@@ -11,10 +10,10 @@ if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS)
   return()
 endif()
 
-set(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_PARTS_REQUIRED_ARGUMENT)
-if(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_REQUIRED)
-  set(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_PARTS_REQUIRED_ARGUMENT REQUIRED)
-endif()
+# set(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS_REQUIRED_ARGUMENT)
+# if(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_REQUIRED)
+#   set(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS_REQUIRED_ARGUMENT REQUIRED)
+# endif()
 
 foreach(component ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS})
   # First look into paths relative to this namespace config file
@@ -25,6 +24,7 @@ foreach(component ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS})
     @MDT_CONFIG_INSTALL_NAMESPACE@${component}
     ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_VERSION}
     QUIET CONFIG
+#     ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS_REQUIRED_ARGUMENT}
     PATHS "${CMAKE_CURRENT_LIST_DIR}/@MDT_CONFIG_COMPONENTS_RELATIVE_PATH@" NO_DEFAULT_PATH
   )
   if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@${component}_FOUND)
@@ -34,6 +34,7 @@ foreach(component ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS})
       @MDT_CONFIG_INSTALL_NAMESPACE@${component}
       ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_VERSION}
       QUIET CONFIG
+#       ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS_REQUIRED_ARGUMENT}
     )
   endif()
   if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@${component}_FOUND AND ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_REQUIRED_${component}})
@@ -43,44 +44,4 @@ foreach(component ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS})
   endif()
 endforeach()
 
-unset(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_PARTS_REQUIRED_ARGUMENT)
-
-# foreach(component ${Mdt0_FIND_COMPONENTS})
-#   find_package(
-#     Mdt0${component}
-#     ${Mdt0_FIND_VERSION}
-#     QUIET CONFIG
-#     PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH
-#   )
-#   if(NOT Mdt0${component}_FOUND AND ${Mdt0_FIND_REQUIRED_${component}})
-#     find_package(
-#       Mdt0${component}
-#       ${Mdt0_FIND_VERSION}
-#       QUIET CONFIG
-#     )
-#     if(NOT Mdt0${component}_FOUND AND ${Mdt0_FIND_REQUIRED_${component}})
-#       set(Mdt0_NOT_FOUND_MESSAGE "Failed to find Mdt0::${component}")
-#       set(Mdt0_FOUND False)
-#       break()
-#     endif()
-#   endif()
-# endforeach()
-
-# foreach(module ${Qt5_FIND_COMPONENTS})
-#     find_package(Qt5${module}
-#         ${_Qt5_FIND_PARTS_QUIET}
-#         ${_Qt5_FIND_PARTS_REQUIRED}
-#         PATHS ${_qt5_module_paths} NO_DEFAULT_PATH
-#     )
-#     if (NOT Qt5${module}_FOUND)
-#         string(CONFIGURE ${_qt5_module_location_template} _expected_module_location @ONLY)
-# 
-#         if (Qt5_FIND_REQUIRED_${module})
-#             set(_Qt5_NOTFOUND_MESSAGE "${_Qt5_NOTFOUND_MESSAGE}Failed to find Qt5 component \"${module}\" config file at \"${_expected_module_location}\"\n")
-#         elseif(NOT Qt5_FIND_QUIETLY)
-#             message(WARNING "Failed to find Qt5 component \"${module}\" config file at \"${_expected_module_location}\"")
-#         endif()
-# 
-#         unset(_expected_module_location)
-#     endif()
-# endforeach()
+# unset(@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS_REQUIRED_ARGUMENT)
