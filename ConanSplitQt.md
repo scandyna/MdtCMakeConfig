@@ -112,7 +112,7 @@ the problem of combinatorial builds is back.
 
 With modern Conan CMake generators, all CMake config files are generated in the users build directory.
 
-I think we cannot do this in a sane way.
+I think we cannot copy Qt5Config.cmake to the user build directory in a sane way.
 
 A way to solve this is to set the path
 to the directory that contains the Qt5Config.cmake file
