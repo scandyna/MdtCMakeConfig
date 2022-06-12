@@ -54,28 +54,16 @@ include(MdtInstallDirs)
 
 set(MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR "${MDT_INSTALL_DATADIR}/cmake")
 
-# include(MdtPackageConfigHelpers)
-# mdt_install_namespace_package_config_file(
-#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
-#   DESTINATION "${MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR}"
-# )
-
 function(mdt_install_mdt_config)
 
   set(options)
-  set(oneValueArgs COMPONENTS_RELATIVE_PATH DESTINATION COMPONENT)
+  set(oneValueArgs COMPONENTS_RELATIVE_PATH DESTINATION)
   set(multiValueArgs)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-#   if(NOT ARG_INSTALL_NAMESPACE)
-#     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument INSTALL_NAMESPACE missing")
-#   endif()
   if(NOT ARG_COMPONENTS_RELATIVE_PATH)
     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument COMPONENTS_RELATIVE_PATH missing")
   endif()
-#   if(NOT ARG_FILE_NAME)
-#     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument FILE_NAME missing")
-#   endif()
   if(NOT ARG_DESTINATION)
     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument DESTINATION missing")
   endif()
@@ -92,7 +80,6 @@ function(mdt_install_mdt_config)
 
   configure_package_config_file(MdtConfig.cmake.in
     "${packageConfigFile}"
-  #   PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
     INSTALL_DESTINATION "${ARG_DESTINATION}"
@@ -106,15 +93,13 @@ function(mdt_install_mdt_config)
 endfunction()
 
 mdt_install_mdt_config(
-#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
   COMPONENTS_RELATIVE_PATH ..
-#   FILE_NAME Mdt${PROJECT_VERSION_MAJOR}
   DESTINATION "${MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR}"
 )
 
-mdt_install_mdt_config(
-#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
-  COMPONENTS_RELATIVE_PATH .
-#   FILE_NAME Mdt${PROJECT_VERSION_MAJOR}
-  DESTINATION "conan"
-)
+if(INSTALL_CONAN_PACKAGE_FILES)
+  mdt_install_mdt_config(
+    COMPONENTS_RELATIVE_PATH .
+    DESTINATION "conan"
+  )
+endif()
