@@ -37,6 +37,7 @@ message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
 #######################
 
 option(BUILD_TESTS "Build the tests" OFF)
+option(INSTALL_CONAN_PACKAGE_FILES "Install files required for recent conan generators, like CMakeDeps" OFF)
 
 if(BUILD_TESTS)
   enable_testing()
@@ -53,8 +54,67 @@ include(MdtInstallDirs)
 
 set(MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR "${MDT_INSTALL_DATADIR}/cmake")
 
-include(MdtPackageConfigHelpers)
-mdt_install_namespace_package_config_file(
-  INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
+# include(MdtPackageConfigHelpers)
+# mdt_install_namespace_package_config_file(
+#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
+#   DESTINATION "${MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR}"
+# )
+
+function(mdt_install_mdt_config)
+
+  set(options)
+  set(oneValueArgs COMPONENTS_RELATIVE_PATH DESTINATION COMPONENT)
+  set(multiValueArgs)
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+#   if(NOT ARG_INSTALL_NAMESPACE)
+#     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument INSTALL_NAMESPACE missing")
+#   endif()
+  if(NOT ARG_COMPONENTS_RELATIVE_PATH)
+    message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument COMPONENTS_RELATIVE_PATH missing")
+  endif()
+#   if(NOT ARG_FILE_NAME)
+#     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument FILE_NAME missing")
+#   endif()
+  if(NOT ARG_DESTINATION)
+    message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument DESTINATION missing")
+  endif()
+  if(ARG_UNPARSED_ARGUMENTS)
+    message(FATAL_ERROR "mdt_install_mdt_config(): unknown arguments passed: ${ARG_UNPARSED_ARGUMENTS}")
+  endif()
+
+  set(packageConfigFile "${CMAKE_CURRENT_BINARY_DIR}/${ARG_DESTINATION}/Mdt${PROJECT_VERSION_MAJOR}Config.cmake")
+
+  set(MDT_CONFIG_INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR})
+  set(MDT_CONFIG_COMPONENTS_RELATIVE_PATH "${ARG_COMPONENTS_RELATIVE_PATH}")
+
+  include(CMakePackageConfigHelpers)
+
+  configure_package_config_file(MdtConfig.cmake.in
+    "${packageConfigFile}"
+  #   PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    INSTALL_DESTINATION "${ARG_DESTINATION}"
+  )
+
+  install(
+    FILES "${packageConfigFile}"
+    DESTINATION "${ARG_DESTINATION}"
+  )
+
+endfunction()
+
+mdt_install_mdt_config(
+#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
+  COMPONENTS_RELATIVE_PATH ..
+#   FILE_NAME Mdt${PROJECT_VERSION_MAJOR}
   DESTINATION "${MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR}"
+)
+
+mdt_install_mdt_config(
+#   INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR}
+  COMPONENTS_RELATIVE_PATH .
+#   FILE_NAME Mdt${PROJECT_VERSION_MAJOR}
+  DESTINATION "conan"
 )
