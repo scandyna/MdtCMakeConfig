@@ -46,8 +46,9 @@ class MdtCMakeConfigConan(ConanFile):
   # See https://github.com/conan-io/conan/issues/3635
   # and https://github.com/conan-io/conan/pull/2676
   def export_sources(self):
-    #self.copy("*", src="../../Modules", dst="Modules")
-    #self.copy("CMakeLists.txt", src="../../", dst=".")
+    self.copy("mdtcmakeconfig-conan-cmake-modules.cmake")
+    self.copy("CMakeLists.txt", src="../../", dst=".")
+    self.copy("MdtConfig.cmake.in", src="../../", dst=".")
     self.copy("LICENSE", src="../../", dst=".")
 
   def generate(self):
@@ -64,6 +65,7 @@ class MdtCMakeConfigConan(ConanFile):
   def package(self):
     cmake = CMake(self)
     cmake.install()
+    self.copy("mdtcmakeconfig-conan-cmake-modules.cmake")
 
   def package_id(self):
     self.info.header_only()
@@ -74,8 +76,12 @@ class MdtCMakeConfigConan(ConanFile):
     build_modules = ["mdtcmakeconfig-conan-cmake-modules.cmake"]
 
     # This will be used by CMakeDeps
-    #self.cpp_info.set_property("cmake_build_modules", build_modules)
+    self.cpp_info.set_property("cmake_file_name", "Mdt0")
+    self.cpp_info.set_property("cmake_build_modules", build_modules)
 
     # This must be added for other generators
-    #self.cpp_info.build_modules["cmake_find_package"] = build_modules
-    #self.cpp_info.build_modules["cmake_find_package_multi"] = build_modules
+    self.cpp_info.names["cmake_find_package"] = "Mdt0"
+    self.cpp_info.names["cmake_find_package_multi"] = "Mdt0"
+    
+    self.cpp_info.build_modules["cmake_find_package"] = build_modules
+    self.cpp_info.build_modules["cmake_find_package_multi"] = build_modules

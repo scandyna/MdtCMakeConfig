@@ -43,7 +43,13 @@ class MdtCMakeConfigTestsItemModelConan(ConanFile):
   def package_info(self):
 
     self.cpp_info.includedirs = []
-    build_modules = ["mdtcmakeconfig-conan-cmake-modules.cmake"]
+    
+    self.cpp_info.set_property("cmake_file_name", "Mdt0ItemModel")
+    
+    self.cpp_info.names["cmake_find_package"] = "Mdt0ItemModel"
+    self.cpp_info.names["cmake_find_package_multi"] = "Mdt0ItemModel"
+    
+    #build_modules = ["mdtcmakeconfig-conan-cmake-modules.cmake"]
 
     # This will be used by CMakeDeps
     #self.cpp_info.set_property("cmake_build_modules", build_modules)
