@@ -241,8 +241,7 @@ At this point, `Qt5_FOUND` is set and `find_package()` stops.
 If we did not do any workaround, Qt5Core will not be available to the user project.
 
 But, because we declared `conan-qt5-config.cmake` as build module, it will be included.
-This one will include the upstream `Qt5Config.cmake`,
-which contains the code to find the components:
+This one contains the code to find the components:
 ```cmake
 foreach(component ${Qt5_FIND_COMPONENTS})
   # Simplified call (see above example for missing arguments)
