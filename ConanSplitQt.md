@@ -118,30 +118,42 @@ the problem of combinatorial builds is back.
 
 With modern Conan CMake generators, all CMake config files are generated in the users build directory.
 
-I think we cannot copy Qt5Config.cmake to the user build directory in a sane way.
+We have to provide some CMake code that will locate Qt components
+in the build directory of the user.
 
-TODO: wrong , rework !!
+We can use what Conan calls a `build_module`,
+that will be included by the generated `Qt5Config.cmake`.
 
-A way to solve this is to set the path
-to the directory that contains the Qt5Config.cmake file
-to the `Qt5_DIR` variable.
+For some details about `build_modules` and some rules to follow,
+see [Conan and CMake](https://scandyna.gitlab.io/mdt-cmake-modules/ConanAndCMake.html).
 
-I think there is no way to express this directly in the conanfile.py.
-For details about that, see [Conan and CMake](https://scandyna.gitlab.io/mdt-cmake-modules/ConanAndCMake.html).
-
-The trick is to create what Conan calls a `build_module`,
-that will set the `Qt5_DIR` variable.
-Here is a example of the build module, called `conan-qt5-config.cmake`:
+Here is a simplified example of the build module, named `conan-qt5-config.cmake`:
 ```cmake
-set(Qt5_DIR "${CMAKE_CURRENT_LIST_DIR}")
+# Prevent for multiple inclusion
+if(Qt5_CONFIG_INCLUDED)
+  return()
+endif()
+set(Qt5_CONFIG_INCLUDED TRUE)
+
+set(_Qt5_FIND_PARTS_REQUIRED)
+if (Qt5_FIND_REQUIRED)
+  set(_Qt5_FIND_PARTS_REQUIRED REQUIRED)
+endif()
+
+foreach(component ${Qt5_FIND_COMPONENTS})
+  # Limit the search to CMAKE_PREFIX_PATH
+  find_package(Qt5${component}
+    QUIET CONFIG
+    ${_Qt5_FIND_PARTS_REQUIRED}
+    NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
+  )
+endforeach()
 ```
 
 For this example, the (installed) package layout looks like this:
 ```
 package-root
-  |-conan
-      |-Qt5Config.cmake
-      |-conan-qt5-config.cmake
+  |-conan-qt5-config.cmake
 ```
 
 In the conanfile, we declare `conan-qt5-config.cmake` as build module:
@@ -154,7 +166,7 @@ class QtConan(ConanFile):
 
     self.cpp_info.set_property("cmake_file_name", "Qt5")
 
-    build_modules = ["conan/conan-qt5-config.cmake"]
+    build_modules = ["conan-qt5-config.cmake"]
 
     self.cpp_info.set_property("cmake_build_modules", build_modules)
     # Note: how can we tell Conan to not generate a fake Qt::Qt target ?
@@ -247,7 +259,7 @@ because it is in the `CMAKE_PREFIX_PATH`.
 As first idea, I tough that the build module `conan-qt5-config.cmake`
 should set `Qt5_DIR` so that it references the upstream `Qt5Config.cmake`.
 This did not work.
-The reason is explained above in the `find_package() search procedure.
+The reason is explained above in the find_package() search procedure.
 
 ## Reuse upstream Qt5Config.cmake ?
 
@@ -255,7 +267,7 @@ First idea was to create one Qt5Config.cmake and reuse it for the Conan package.
 
 Looking a bit deeper, I realized that the upstream and the Conan version are slightly different.
 
-Simplified version of upstream Qt5Config.cmake:
+Simplified version of upstream `Qt5Config.cmake`:
 ```cmake
 get_filename_component(_qt5_install_prefix "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
 
