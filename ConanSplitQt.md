@@ -180,6 +180,14 @@ class QtWidgetsConan(ConanFile):
 
 # Rationale
 
+Here are described some things I have tried.
+
+All examples refers to Qt5 as example,
+because it is a known library.
+
+In reallity, I'm inspired by Qt,
+but all that I have tried is for Mdt.
+
 ## find_package() search procedure
 
 This is what I understand, it could be wrong, and it is not complete.
@@ -240,6 +248,35 @@ As first idea, I tough that the build module `conan-qt5-config.cmake`
 should set `Qt5_DIR` so that it references the upstream `Qt5Config.cmake`.
 This did not work.
 The reason is explained above in the `find_package() search procedure.
+
+## Reuse upstream Qt5Config.cmake ?
+
+First idea was to create one Qt5Config.cmake and reuse it for the Conan package.
+
+Looking a bit deeper, I realized that the upstream and the Conan version are slightly different.
+
+Simplified version of upstream Qt5Config.cmake:
+```cmake
+get_filename_component(_qt5_install_prefix "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
+
+foreach(component ${Qt5_FIND_COMPONENTS})
+  find_package(Qt5${component}
+    PATHS ${_qt5_install_prefix} NO_DEFAULT_PATH
+  )
+endforeach()
+```
+Above version will find the components in the Qt distribution.
+
+Simplified version of `conan-qt5-config.cmake`:
+```cmake
+foreach(component ${Qt5_FIND_COMPONENTS})
+  find_package(Qt5${component}
+    NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
+  )
+endforeach()
+```
+Above version will find the components in the `CMAKE_PREFIX_PATH`,
+which will be set to the user build directory by Conan.
 
 ## Define Conan recipes with components ?
 
