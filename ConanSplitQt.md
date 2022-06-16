@@ -50,17 +50,17 @@ The 2 other libraries (Qt5Widgets and Qt5Sql) are defined the same way.
 
 The simplified content of `Qt5Config.cmake` looks like this:
 ```cmake
-set(_Qt5_FIND_PARTS_REQUIRED)
-if (Qt5_FIND_REQUIRED)
-  set(_Qt5_FIND_PARTS_REQUIRED REQUIRED)
-endif()
 
 foreach(component ${Qt5_FIND_COMPONENTS})
   find_package(Qt5${component}
     QUIET CONFIG
-    ${_Qt5_FIND_PARTS_REQUIRED}
     NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
   )
+  if(NOT Qt5${component}_FOUND AND ${Qt5_FIND_REQUIRED_${component}})
+    set(Qt5_NOT_FOUND_MESSAGE "Failed to find Qt5 component ${component} config file (Qt5${component}Config.cmake)")
+    set(Qt5_FOUND False)
+    break()
+  endif()
 endforeach()
 ```
 
@@ -135,18 +135,17 @@ if(Qt5_CONFIG_INCLUDED)
 endif()
 set(Qt5_CONFIG_INCLUDED TRUE)
 
-set(_Qt5_FIND_PARTS_REQUIRED)
-if (Qt5_FIND_REQUIRED)
-  set(_Qt5_FIND_PARTS_REQUIRED REQUIRED)
-endif()
-
 foreach(component ${Qt5_FIND_COMPONENTS})
   # Limit the search to CMAKE_PREFIX_PATH
   find_package(Qt5${component}
     QUIET CONFIG
-    ${_Qt5_FIND_PARTS_REQUIRED}
     NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
   )
+  if(NOT Qt5${component}_FOUND AND ${Qt5_FIND_REQUIRED_${component}})
+    set(Qt5_NOT_FOUND_MESSAGE "Failed to find Qt5 component ${component} config file (Qt5${component}Config.cmake)")
+    set(Qt5_FOUND False)
+    break()
+  endif()
 endforeach()
 ```
 
