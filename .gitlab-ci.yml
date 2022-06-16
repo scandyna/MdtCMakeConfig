@@ -1,0 +1,39 @@
+###############################
+# Runners + global parts
+###############################
+
+.windows_runner:
+  tags:
+    - docker-windows
+
+stages:
+  - build
+  - test
+  - deploy
+
+###############################
+# Conan
+###############################
+
+.setup_conan:
+  script:
+    - conan remote add scandyna https://gitlab.com/api/v4/projects/25668674/packages/conan
+    - conan config install --source-folder conan https://gitlab.com/scandyna/conan-config.git
+
+.conan_createAndTest:
+  stage: build
+  script:
+    - !reference [.setup_conan, script]
+    - conan create packaging/conan 0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE --test-folder None
+    - conan create packaging/conan/tests/libs/ItemModel scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE --test-folder None
+    - conan test packaging/conan/test_package MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
+    - conan test packaging/conan/test_cmake MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
+    - conan test packaging/conan/test_cmake_find_package_multi MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
+    - conan test packaging/conan/test_cmakedeps MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
+
+conan_linux_debug:
+  image: registry.gitlab.com/scandyna/docker-images-ubuntu/ubuntu-18.04-cpp:latest
+  variables:
+    CONAN_PROFILE: linux_gcc7_x86_64
+    BUILD_TYPE: Debug
+  extends: .conan_createAndTest
