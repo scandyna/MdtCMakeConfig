@@ -15,27 +15,14 @@ if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS)
   return()
 endif()
 
-
 foreach(component ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS})
-  # First look into paths relative to this namespace config file
-  # This can be useful when all libraries are installed to a common root
-  # find_package() looks at given PATHS at last resort,
-  # so we have call it first time telling it not to search elsewhere
+  # Limit the search to CMAKE_PREFIX_PATH
   find_package(
     @MDT_CONFIG_INSTALL_NAMESPACE@${component}
     ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_VERSION}
     QUIET CONFIG
-    PATHS "${CMAKE_CURRENT_LIST_DIR}/.." NO_DEFAULT_PATH
+    NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_PACKAGE_REGISTRY NO_CMAKE_SYSTEM_PATH NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
   )
-  if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@${component}_FOUND)
-    # Libraries are installed in various places,
-    # let find_package() search in CMAKE_PREFIX_PATH etc...
-    find_package(
-      @MDT_CONFIG_INSTALL_NAMESPACE@${component}
-      ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_VERSION}
-      QUIET CONFIG
-    )
-  endif()
   if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@${component}_FOUND AND ${@MDT_CONFIG_INSTALL_NAMESPACE@_FIND_REQUIRED_${component}})
     set(@MDT_CONFIG_INSTALL_NAMESPACE@_NOT_FOUND_MESSAGE "Failed to find @MDT_CONFIG_INSTALL_NAMESPACE@ component ${component} config file (@MDT_CONFIG_INSTALL_NAMESPACE@${component}Config.cmake)")
     set(@MDT_CONFIG_INSTALL_NAMESPACE@_FOUND False)

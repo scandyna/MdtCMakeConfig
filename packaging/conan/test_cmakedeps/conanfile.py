@@ -7,14 +7,12 @@ class MdtCMakeConfigTestConan(ConanFile):
   generators = "CMakeToolchain", "CMakeDeps"
   requires = "MdtCMakeConfig_Tests_ItemModel/0.0.0@scandyna/testing"
 
-
-  # TODO: try source() method ?
+  # source() and export_source() are not called
   def layout(self):
     cmake_layout(self, src_folder="../test_package")
 
   def generate(self):
     tc = CMakeToolchain(self)
-    tc.variables["CMAKE_SOURCE_DIR"] = "../test_package"
     tc.variables["CMAKE_MESSAGE_LOG_LEVEL"] = "DEBUG"
     tc.generate()
 

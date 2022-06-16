@@ -46,9 +46,9 @@ class MdtCMakeConfigConan(ConanFile):
   # See https://github.com/conan-io/conan/issues/3635
   # and https://github.com/conan-io/conan/pull/2676
   def export_sources(self):
-    self.copy("mdtcmakeconfig-conan-cmake-modules.cmake")
     self.copy("CMakeLists.txt", src="../../", dst=".")
     self.copy("MdtConfig.cmake.in", src="../../", dst=".")
+    self.copy("conan-mdt-config.cmake.in", src="../../", dst=".")
     self.copy("LICENSE", src="../../", dst=".")
 
   def generate(self):
@@ -65,7 +65,6 @@ class MdtCMakeConfigConan(ConanFile):
   def package(self):
     cmake = CMake(self)
     cmake.install()
-    self.copy("mdtcmakeconfig-conan-cmake-modules.cmake")
 
   def package_id(self):
     self.info.header_only()
@@ -73,7 +72,7 @@ class MdtCMakeConfigConan(ConanFile):
   def package_info(self):
 
     self.cpp_info.includedirs = []
-    build_modules = ["mdtcmakeconfig-conan-cmake-modules.cmake"]
+    build_modules = ["conan-mdt0-config.cmake"]
 
     # This will be used by CMakeDeps
     self.cpp_info.set_property("cmake_file_name", "Mdt0")

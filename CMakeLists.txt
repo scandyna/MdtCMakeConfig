@@ -57,12 +57,15 @@ set(MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR "${MDT_INSTALL_DATADIR}/cmake")
 function(mdt_install_mdt_config)
 
   set(options)
-  set(oneValueArgs COMPONENTS_RELATIVE_PATH DESTINATION)
+  set(oneValueArgs CONFIG_FILE_IN CONFIG_FILE_OUT DESTINATION)
   set(multiValueArgs)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-  if(NOT ARG_COMPONENTS_RELATIVE_PATH)
-    message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument COMPONENTS_RELATIVE_PATH missing")
+  if(NOT ARG_CONFIG_FILE_IN)
+    message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument CONFIG_FILE_IN missing")
+  endif()
+  if(NOT ARG_CONFIG_FILE_OUT)
+    message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument CONFIG_FILE_OUT missing")
   endif()
   if(NOT ARG_DESTINATION)
     message(FATAL_ERROR "mdt_install_mdt_config(): mandatory argument DESTINATION missing")
@@ -71,35 +74,34 @@ function(mdt_install_mdt_config)
     message(FATAL_ERROR "mdt_install_mdt_config(): unknown arguments passed: ${ARG_UNPARSED_ARGUMENTS}")
   endif()
 
-  set(packageConfigFile "${CMAKE_CURRENT_BINARY_DIR}/${ARG_DESTINATION}/Mdt${PROJECT_VERSION_MAJOR}Config.cmake")
-
   set(MDT_CONFIG_INSTALL_NAMESPACE Mdt${PROJECT_VERSION_MAJOR})
-  set(MDT_CONFIG_COMPONENTS_RELATIVE_PATH "${ARG_COMPONENTS_RELATIVE_PATH}")
 
   include(CMakePackageConfigHelpers)
 
-  configure_package_config_file(MdtConfig.cmake.in
-    "${packageConfigFile}"
+  configure_package_config_file("${ARG_CONFIG_FILE_IN}"
+    "${ARG_CONFIG_FILE_OUT}"
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
     INSTALL_DESTINATION "${ARG_DESTINATION}"
   )
 
   install(
-    FILES "${packageConfigFile}"
+    FILES "${ARG_CONFIG_FILE_OUT}"
     DESTINATION "${ARG_DESTINATION}"
   )
 
 endfunction()
 
 mdt_install_mdt_config(
-  COMPONENTS_RELATIVE_PATH ..
+  CONFIG_FILE_IN "MdtConfig.cmake.in"
+  CONFIG_FILE_OUT "${CMAKE_CURRENT_BINARY_DIR}/Mdt${PROJECT_VERSION_MAJOR}Config.cmake"
   DESTINATION "${MDT_CMAKE_MODULE_INSTALL_CONFIG_DIR}"
 )
 
 if(INSTALL_CONAN_PACKAGE_FILES)
   mdt_install_mdt_config(
-    COMPONENTS_RELATIVE_PATH .
-    DESTINATION "conan"
+    CONFIG_FILE_IN "conan-mdt-config.cmake.in"
+    CONFIG_FILE_OUT "${CMAKE_CURRENT_BINARY_DIR}/conan-mdt${PROJECT_VERSION_MAJOR}-config.cmake"
+    DESTINATION "."
   )
 endif()
