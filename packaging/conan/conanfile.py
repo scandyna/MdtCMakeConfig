@@ -81,6 +81,6 @@ class MdtCMakeConfigConan(ConanFile):
     # This must be added for other generators
     self.cpp_info.names["cmake_find_package"] = "Mdt0"
     self.cpp_info.names["cmake_find_package_multi"] = "Mdt0"
-    
+
     self.cpp_info.build_modules["cmake_find_package"] = build_modules
     self.cpp_info.build_modules["cmake_find_package_multi"] = build_modules
