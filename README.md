@@ -1,5 +1,7 @@
 # Global scope MdtConfig.cmake
 
+[![pipeline status](https://gitlab.com/scandyna/mdtcmakeconfig/badges/experimental/pipeline.svg)](https://gitlab.com/scandyna/mdtcmakeconfig/-/pipelines/latest)
+
 [[_TOC_]]
 
 # Usage
