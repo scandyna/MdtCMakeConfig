@@ -35,6 +35,8 @@ sudo apt-get install mdt0plaintext
 # Will also install mdt0cmakeconfig
 ```
 
+Note: Debian package is not implemented yet
+
 # Work on MdtCMakeConfig
 
 ## Build and test
