@@ -45,7 +45,16 @@ See [BUILD](BUILD.md).
 
 # Rationale
 
+## Conan
+
 To create Conan packages that support `find_package` COMPONENTS syntax
 with the new Conan generators is discussed in [Split Qt packages](ConanSplitQt.md).
+
+## No package manager
+
+[Here](NoPackageManager.md)
+are some thought about usage without a package manager.
+
+## Background
 
 [Here](MdtBackground.md) are also some other discussions about Mdt.
