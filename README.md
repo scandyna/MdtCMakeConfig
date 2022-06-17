@@ -18,8 +18,7 @@ find_package(Mdt0 REQUIRED COMPONENTS PlainText)
 The library should depend on `MdtCMakeConfig`:
 ```txt
 [requires]
-# TODO: check if 0 is ok for Conan
-MdtCMakeConfig/0@scandyna/testing
+MdtCMakeConfig/0.x.y@scandyna/testing
 ```
 
 The user project will then use the library:
