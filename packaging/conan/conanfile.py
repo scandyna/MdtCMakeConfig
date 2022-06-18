@@ -12,7 +12,7 @@ class MdtCMakeConfigConan(ConanFile):
   # But, it requires the settings.
   # So, add them here and erase them in the package_id()
   settings = "os", "arch", "compiler", "build_type"
-  generators = "CMakeToolchain", "CMakeDeps"
+  generators = "CMakeDeps", "VirtualBuildEnv"
 
   # The version can be set on the command line:
   # conan create . x.y.z@scandyna/testing ...
