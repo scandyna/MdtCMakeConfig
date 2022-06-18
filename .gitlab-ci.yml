@@ -48,10 +48,11 @@ stages:
     - cd build
     - conan --version
     - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
-    #- source conanbuild.sh
+    - set -x  # Enable Bash debug. TODO: remove once problem solved
+    - source conanbuild.sh
     - !reference [.cmake_configure, script]
     - cmake --build . --config $BUILD_TYPE -j4
-    #- source deactivate_conanbuild.sh
+    - source deactivate_conanbuild.sh
   artifacts:
     expire_in: 1 day
     paths:
