@@ -12,7 +12,7 @@ stages:
   - deploy
 
 ###############################
-# Conan
+# Conan templates
 ###############################
 
 .setup_conan:
@@ -31,9 +31,88 @@ stages:
     - conan test packaging/conan/test_cmake_find_package_multi MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
     - conan test packaging/conan/test_cmakedeps MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
 
-conan_linux_debug:
+###############################
+# Build & test templates
+###############################
+
+.cmake_configure:
+  script:
+    - cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON ..
+
+.build_linux:
+  stage: build
+  before_script:
+    - !reference [.setup_conan, script]
+  script:
+    - mkdir build
+    - cd build
+    - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
+    - source conanbuild.sh
+    - !reference [.cmake_configure, script]
+    - cmake --build . --config $BUILD_TYPE -j4
+    - source deactivate_conanbuild.sh
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build
+
+.test_linux:
+  stage: test
+  before_script:
+    - !reference [.setup_conan, script]
+  script:
+    - cd build
+    - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
+    - ctest --output-on-failure -C $BUILD_TYPE
+  artifacts:
+    when: on_failure
+    expire_in: 1 week
+    paths:
+      - build
+
+###############################
+# Build & test Linux
+###############################
+
+.buildAndTest_Linux_gcc7_x86_64_debug:
+  image: registry.gitlab.com/scandyna/docker-images-ubuntu/ubuntu-18.04-cpp:latest
+  variables:
+    CONAN_PROFILE: linux_gcc7_x86_64
+    BUILD_TYPE: Debug
+
+build_linux_gcc7_x86_64_debug:
+  extends:
+    - .buildAndTest_Linux_gcc7_x86_64_debug
+    - .build_linux
+
+test_linux_gcc7_x86_64_debug:
+  dependencies:
+    - build_linux_gcc7_x86_64_debug
+  extends:
+    - .buildAndTest_Linux_gcc7_x86_64_debug
+    - .test_linux
+  needs: ["build_linux_gcc7_x86_64_debug"]
+
+
+###############################
+# Build & test Windows
+###############################
+
+###############################
+# Conan create & test Linux
+###############################
+
+Conan_CreateAndTest_Linux_Debug:
   image: registry.gitlab.com/scandyna/docker-images-ubuntu/ubuntu-18.04-cpp:latest
   variables:
     CONAN_PROFILE: linux_gcc7_x86_64
     BUILD_TYPE: Debug
   extends: .conan_createAndTest
+
+###############################
+# Conan create & test Windows
+###############################
+
+###############################
+# Deploy Conan (Linux)
+###############################
