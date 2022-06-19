@@ -1,5 +1,5 @@
 from conans import ConanFile, tools
-from conan.tools.cmake import CMake, CMakeToolchain
+from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout
 import os
 
 class MdtCMakeConfigConan(ConanFile):
@@ -50,6 +50,10 @@ class MdtCMakeConfigConan(ConanFile):
     self.copy("MdtConfig.cmake.in", src="../../", dst=".")
     self.copy("conan-mdt-config.cmake.in", src="../../", dst=".")
     self.copy("LICENSE", src="../../", dst=".")
+
+  #def layout(self):
+    #cmake_layout(self)
+    #cmake_layout(self, src_folder="../../")
 
   def generate(self):
     tc = CMakeToolchain(self)
