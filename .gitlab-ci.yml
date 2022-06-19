@@ -51,7 +51,7 @@ stages:
     - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
     - set -x  # Enable Bash debug. TODO: remove once problem solved
     - echo $?
-    - source conanbuild.sh
+    - source conanbuild.sh || true
     - echo $?
     - !reference [.cmake_configure, script]
     - cmake --build . --config $BUILD_TYPE -j4
