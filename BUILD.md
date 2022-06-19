@@ -25,6 +25,13 @@ cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON ..
 cmake-gui .
 ```
 
+If using Poweshell on Windows,
+the toolchain file expression should be quoted:
+```bash
+cmake "-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake" -DBUILD_TESTS=ON ..
+```
+See also [this issue](https://gitlab.kitware.com/cmake/cmake/-/issues/23109).
+
 ## Build and run the tests
 
 Those examples use cmake to run the build,
