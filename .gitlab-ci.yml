@@ -81,10 +81,10 @@ stages:
     - mkdir build
     - cd build
     - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
-    - conanbuild.bat
+    - ./conanbuild.bat
     - !reference [.cmake_configure, script]
     - cmake --build . --config $BUILD_TYPE -j4
-    - deactivate_conanbuild.bat
+    - ./deactivate_conanbuild.bat
   artifacts:
     expire_in: 1 day
     paths:
