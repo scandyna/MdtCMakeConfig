@@ -39,6 +39,7 @@ stages:
   script:
     - cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON ..
 
+# TODO: see https://gitlab.com/gitlab-org/ci-cd/pipeline-authoring-stack-rank/-/issues/1
 .build_linux:
   stage: build
   before_script:
