@@ -46,7 +46,6 @@ stages:
   script:
     - mkdir build
     - cd build
-    - conan --version
     - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
     - source conanbuild.sh || true  # Workaround to https://gitlab.com/gitlab-org/ci-cd/pipeline-authoring-stack-rank/-/issues/1
     - !reference [.cmake_configure, script]
@@ -59,6 +58,42 @@ stages:
 
 .test_linux:
   stage: test
+  before_script:
+    - !reference [.setup_conan, script]
+  script:
+    - cd build
+    - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
+    - ctest --output-on-failure -C $BUILD_TYPE
+  artifacts:
+    when: on_failure
+    expire_in: 1 week
+    paths:
+      - build
+
+
+.build_windows:
+  stage: build
+  extends:
+    - .windows_runner
+  before_script:
+    - !reference [.setup_conan, script]
+  script:
+    - mkdir build
+    - cd build
+    - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
+    - source conanbuild.sh || true  # Workaround to https://gitlab.com/gitlab-org/ci-cd/pipeline-authoring-stack-rank/-/issues/1
+    - !reference [.cmake_configure, script]
+    - cmake --build . --config $BUILD_TYPE -j4
+    - source deactivate_conanbuild.sh
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build
+
+.test_windows:
+  stage: test
+  extends:
+    - .windows_runner
   before_script:
     - !reference [.setup_conan, script]
   script:
@@ -98,6 +133,25 @@ test_linux_gcc7_x86_64_debug:
 ###############################
 # Build & test Windows
 ###############################
+
+.buildAndTest_Windows_gcc7_x86_64_debug:
+  image: registry.gitlab.com/scandyna/docker-images-windows/windows-cpp-win64_mingw73:latest
+  variables:
+    CONAN_PROFILE: windows_gcc7_x86_64
+    BUILD_TYPE: Debug
+
+build_windows_gcc7_x86_64_debug:
+  extends:
+    - .buildAndTest_Windows_gcc7_x86_64_debug
+    - .build_windows
+
+test_windows_gcc7_x86_64_debug:
+  dependencies:
+    - build_windows_gcc7_x86_64_debug
+  extends:
+    - .buildAndTest_Windows_gcc7_x86_64_debug
+    - .test_windows
+  needs: ["build_windows_gcc7_x86_64_debug"]
 
 ###############################
 # Conan create & test Linux
