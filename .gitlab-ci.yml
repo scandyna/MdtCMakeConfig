@@ -39,7 +39,6 @@ stages:
   script:
     - cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON ..
 
-# TODO: see https://gitlab.com/gitlab-org/ci-cd/pipeline-authoring-stack-rank/-/issues/1
 .build_linux:
   stage: build
   before_script:
@@ -49,10 +48,7 @@ stages:
     - cd build
     - conan --version
     - conan install --profile $CONAN_PROFILE -s build_type=$BUILD_TYPE ../packaging/conan
-    - set -x  # Enable Bash debug. TODO: remove once problem solved
-    - echo $?
-    - source conanbuild.sh || true
-    - echo $?
+    - source conanbuild.sh || true  # Workaround to https://gitlab.com/gitlab-org/ci-cd/pipeline-authoring-stack-rank/-/issues/1
     - !reference [.cmake_configure, script]
     - cmake --build . --config $BUILD_TYPE -j4
     - source deactivate_conanbuild.sh
