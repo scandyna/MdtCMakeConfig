@@ -204,6 +204,6 @@ deploy_conan:
     - when: never
   script:
     - !reference [.setup_conan, script]
-    - conan create packaging/conan scandyna/testing --profile:build linux_gcc7_x86_64 --profile:host linux_gcc7_x86_64 -s build_type=Debug
+    - conan create packaging/conan scandyna/testing --profile:build linux_gcc7_x86_64 --profile:host linux_gcc7_x86_64 -s build_type=Debug --test-folder None
     - conan user --password ${CI_JOB_TOKEN} --remote scandyna ci_user
     - conan upload MdtCMakeConfig/*@scandyna/testing --remote scandyna --all -c
