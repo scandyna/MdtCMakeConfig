@@ -50,6 +50,10 @@ See [BUILD](BUILD.md).
 To create Conan packages that support `find_package` COMPONENTS syntax
 with the new Conan generators is discussed in [Split Qt packages](ConanSplitQt.md).
 
+There are also some issues about that:
+- [CMake find_package() COMPONENTS syntax across Conan packages #11495](https://github.com/conan-io/conan/issues/11495)
+- [CMakeDeps generator: merge cpp_info of different recipes if common cmake_file_name #10229](https://github.com/conan-io/conan/issues/10229)
+
 ## No package manager
 
 [Here](NoPackageManager.md)
