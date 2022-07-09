@@ -21,7 +21,7 @@ conan install --profile linux_gcc7_x86_64 -s build_type=Debug --build=missing ..
 Configure MdtCMakeConfig:
 ```bash
 source conanbuild.sh
-cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON ..
+cmake -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug ..
 cmake-gui .
 ```
 

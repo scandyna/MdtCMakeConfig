@@ -39,7 +39,8 @@ stages:
   script:
     # The toolchain file expression has to be quoted when using Powershell
     # See https://gitlab.kitware.com/cmake/cmake/-/issues/23109
-    - cmake "-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake" -DBUILD_TESTS=ON ..
+    # Also, conan after v1.47 requires to specify CMAKE_BUILD_TYPE
+    - cmake "-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake" -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
 
 .build_linux:
   stage: build
