@@ -1,16 +1,12 @@
 @PACKAGE_INIT@
 
-if(@MDT_CONFIG_INSTALL_NAMESPACE@_CONFIG_INCLUDED)
-  return()
-endif()
-set(@MDT_CONFIG_INSTALL_NAMESPACE@_CONFIG_INCLUDED TRUE)
-
 if(CMAKE_VERSION VERSION_LESS 3.1.0)
     message(FATAL_ERROR "@MDT_CONFIG_INSTALL_NAMESPACE@ requires at least CMake version 3.1.0")
 endif()
 
+# See https://gitlab.com/scandyna/mdtcmakeconfig/-/issues/2
 if(NOT @MDT_CONFIG_INSTALL_NAMESPACE@_FIND_COMPONENTS)
-  set(@MDT_CONFIG_INSTALL_NAMESPACE@_NOT_FOUND_MESSAGE "The @MDT_CONFIG_INSTALL_NAMESPACE@ package requires at least one component")
+  set(@MDT_CONFIG_INSTALL_NAMESPACE@_NOT_FOUND_MESSAGE "The @MDT_CONFIG_INSTALL_NAMESPACE@ package requires at least one component. Maybe this file was included accidentally by a find_dependency() call because MdtCMakeConfig was declared in the requires section of a conanfile (must be declared as a build_requires)")
   set(@MDT_CONFIG_INSTALL_NAMESPACE@_FOUND False)
   return()
 endif()
