@@ -201,6 +201,15 @@ Conan_CreateAndTest_Windows_Gcc_Debug:
     - .conan_createAndTest
     - .windows_runner
 
+Conan_CreateAndTest_Windows_MSVC_Debug:
+  image: registry.gitlab.com/scandyna/docker-images-windows/windows-cpp-msvc2019:latest
+  variables:
+    CONAN_PROFILE: windows_msvc16_x86_64
+    BUILD_TYPE: Debug
+  extends:
+    - .conan_createAndTest
+    - .windows_runner
+
 ###############################
 # Deploy Conan (Linux)
 ###############################
