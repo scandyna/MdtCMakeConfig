@@ -13,8 +13,10 @@ class MdtCMakeConfigTestsItemModelConan(ConanFile):
   # But, it requires the settings.
   # So, add them here and erase them in the package_id()
   settings = "os", "arch", "compiler", "build_type"
-  build_requires = "MdtCMakeConfig/0.0.0@scandyna/testing"
   generators = "CMakeToolchain"
+
+  def requirements(self):
+    self.requires("MdtCMakeConfig/0.0.0@scandyna/testing")
 
   # The export exports_sources attributes does not work if the conanfile.py is in a sub-folder.
   # See https://github.com/conan-io/conan/issues/3635

@@ -17,7 +17,7 @@ find_package(Mdt0 REQUIRED COMPONENTS PlainText)
 
 The library should depend on `MdtCMakeConfig`:
 ```txt
-[build_requires]
+[requires]
 MdtCMakeConfig/0.x.y@scandyna/testing
 ```
 

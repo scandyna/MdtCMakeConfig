@@ -30,6 +30,7 @@ stages:
     - conan test packaging/conan/test_cmake MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
     - conan test packaging/conan/test_cmake_find_package_multi MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
     - conan test packaging/conan/test_cmakedeps MdtCMakeConfig/0.0.0@scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE
+    - conan create packaging/conan/tests/UserApp scandyna/testing --profile:build $CONAN_PROFILE --profile:host $CONAN_PROFILE -s build_type=$BUILD_TYPE --test-folder None
 
 ###############################
 # Build & test templates
