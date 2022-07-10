@@ -129,11 +129,10 @@ see [Conan and CMake](https://scandyna.gitlab.io/mdt-cmake-modules/ConanAndCMake
 
 Here is a simplified example of the build module, named `conan-qt5-config.cmake`:
 ```cmake
-# Prevent for multiple inclusion
-if(Qt5_CONFIG_INCLUDED)
-  return()
-endif()
-set(Qt5_CONFIG_INCLUDED TRUE)
+# Here we don't check if any component is set.
+# This is because this file will be loaded many times,
+# due to a recursion problem.
+# See https://gitlab.com/scandyna/mdtcmakeconfig/-/issues/2
 
 foreach(component ${Qt5_FIND_COMPONENTS})
   # Limit the search to CMAKE_PREFIX_PATH
