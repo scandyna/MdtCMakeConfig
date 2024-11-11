@@ -18,13 +18,13 @@ find_package(Mdt0 REQUIRED COMPONENTS PlainText)
 The library should depend on `MdtCMakeConfig`:
 ```txt
 [requires]
-MdtCMakeConfig/0.x.y@scandyna/testing
+mdtcmakeconfig/0.x.y@scandyna/testing
 ```
 
 The user project will then use the library:
 ```txt
 [requires]
-MdtPlainText/0.x.y@scandyna/testing
+mdtplaintext/0.x.y@scandyna/testing
 ```
 
 ## Install the Debian package

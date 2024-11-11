@@ -1,0 +1,25 @@
+#####################################################
+# We can't use CI-CD catalog templates here.
+# This is because the requirements to test our package
+# The test package depends on a test library,
+# which itself depends on MdtCMakeConfig
+#####################################################
+
+.Conan_CreateAndTest:
+  stage: build
+  before_script:
+    - conan remote remove conancenter
+    - conan remote add scandyna https://gitlab.com/api/v4/projects/25668674/packages/conan
+    - conan config install --source-folder conan https://gitlab.com/api/v4/projects/16304913/packages/generic/conan1_config/0.1.6/conan_config.zip
+  script:
+    - conan create packaging/conan/mdtcmakeconfig 0.0.0@scandyna/testing
+      --profile:build $CONAN_PROFILE_BUILD --profile:host $CONAN_PROFILE_HOST
+      --settings:build build_type=Release --settings:host build_type=$BUILD_TYPE
+      --test-folder None
+    - conan create packaging/conan/tests/libs/ItemModel 0.0.0@scandyna/testing
+      --profile:build $CONAN_PROFILE_BUILD --profile:host $CONAN_PROFILE_HOST
+      --settings:build build_type=Release --settings:host build_type=$BUILD_TYPE
+      --test-folder None
+    - conan test packaging/conan/mdtcmakeconfig/test_package mdtcmakeconfig/0.0.0@scandyna/testing
+      --profile:build $CONAN_PROFILE_BUILD --profile:host $CONAN_PROFILE_HOST
+      --settings:build build_type=Release --settings:host build_type=$BUILD_TYPE

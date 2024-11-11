@@ -3,12 +3,11 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 from conan.tools.files import copy
 import os
 
-class MdtCMakeConfigTestsItemModelConan(ConanFile):
-  name = "mdtcmakeconfig_tests_itemmodel"
-  version = "0.0.0"
+class MdtCMakeConfigConan(ConanFile):
+  name = "mdtcmakeconfig"
   license = "BSD 3-Clause"
   url = "https://gitlab.com/scandyna/mdtcmakeconfig"
-  description = "Test library for MdtCMakeConfig"
+  description = "Global scope MdtConfig.cmake used in \"Multi Dev Tools\" projects"
   # We use CMake to configure/build/(test)/install
   # We also have dependencies we manage with Conan
   # We then use CMakeDeps and CMakeToolchain generators.
@@ -22,19 +21,27 @@ class MdtCMakeConfigTestsItemModelConan(ConanFile):
   # Should only be enabled if building with MSVC on Windows causes problems
   short_paths = False
 
-  def requirements(self):
-    self.requires("mdtcmakeconfig/0.0.0@scandyna/testing")
+  def set_version(self):
+    if not self.version:
+      self.version = "0.0.0"
+
+  def build_requirements(self):
+    self.test_requires("MdtCMakeModules/0.19.3@scandyna/testing")
 
   def export_sources(self):
-    source_root = os.path.join(self.recipe_folder, "../../../../../tests/libs/ItemModel")
-    copy(self, "*", source_root, self.export_sources_folder)
+    source_root = os.path.join(self.recipe_folder, "../../../")
+    copy(self, "CMakeLists.txt", source_root, self.export_sources_folder)
+    copy(self, "MdtConfig.cmake.in", source_root, self.export_sources_folder)
+    copy(self, "conan-mdt-config.cmake.in", source_root, self.export_sources_folder)
+    copy(self, "LICENSE", source_root, self.export_sources_folder)
 
   def layout(self):
     cmake_layout(self)
 
   def generate(self):
     tc = CMakeToolchain(self)
-    tc.variables["CMAKE_MESSAGE_LOG_LEVEL"] = "DEBUG"
+    tc.variables["FROM_CONAN_PROJECT_VERSION"] = self.version
+    tc.variables["INSTALL_CONAN_PACKAGE_FILES"] = "ON"
     tc.generate()
 
   def build(self):
@@ -53,5 +60,6 @@ class MdtCMakeConfigTestsItemModelConan(ConanFile):
     self.cpp_info.bindirs = []
     self.cpp_info.libdirs = []
     self.cpp_info.includedirs = []
-    self.cpp_info.set_property("cmake_file_name", "Mdt0ItemModel")
-    self.cpp_info.set_property("cmake_target_name", "Mdt0::ItemModel")
+    build_modules = ["conan-mdt0-config.cmake"]
+    self.cpp_info.set_property("cmake_file_name", "Mdt0")
+    self.cpp_info.set_property("cmake_build_modules", build_modules)

@@ -1,0 +1,13 @@
+
+include:
+  - local: 'ci_cd/GitLab/Conan_CreateAndTest_Templates.yml'
+
+
+Conan_CreateAndTest_Ubuntu-18-04_gcc8_x86_64:
+  extends: .Conan_CreateAndTest
+  image: registry.gitlab.com/scandyna/docker-images-ubuntu/ubuntu-18.04-gcc-8:latest
+  variables:
+    CONAN_PROFILE_BUILD: linux_gcc8_x86_64
+    CONAN_PROFILE_HOST: linux_ubuntu-18.04_gcc8_x86_64_qt_widgets_modules_boost
+    CONAN_PACKAGING_DIR: $[[ inputs.conan_packaging_dir ]]
+    BUILD_TYPE: Debug
